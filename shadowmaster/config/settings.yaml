@@ -1,0 +1,68 @@
+# ShadowMaster Framework Configuration
+browser:
+  headless: true
+  timeout: 30000
+  viewport:
+    width: 1280
+    height: 720
+  video_recording: true
+  screenshots: true
+  trace: true
+
+ai:
+  enabled: false
+  provider: "openai"
+  model: "gpt-4o"
+  cache_enabled: true
+  cache_ttl: 3600
+
+sites:
+  reddit:
+    url: "https://www.reddit.com/account/login"
+    name: "Reddit"
+    shadow_elements: []
+    locators:
+      login_btn: "text=Log In"
+      signup_btn: "text=Sign up"
+      email_input: "input[name='email']"
+      username_input: "input[name='username']"
+      password_input: "input[name='password']"
+
+  dasoertliche:
+    url: "https://www.dasoertliche.de"
+    name: "Das Örtliche"
+    shadow_elements:
+      - host: "my-cookie-banner"
+        inner: "button[aria-label='Schließen']"
+    locators:
+      search_input: "input[name='query']"
+      search_btn: "button[type='submit']"
+      popup_host: "my-cookie-banner"
+      close_btn: "button[aria-label='Schließen']"
+
+  gelbeseiten:
+    url: "https://www.gelbeseiten.de"
+    name: "Gelbe Seiten"
+    shadow_elements:
+      - host: "consent-manager"
+        inner: ".accept-all"
+    locators:
+      search_input: "input[placeholder*='suche']"
+      location_input: "input[placeholder*='Ort']"
+      search_btn: "button[data-testid='search-button']"
+      consent_host: "consent-manager"
+      accept_btn: ".accept-all"
+
+  hotfrog:
+    url: "https://www.hotfrog.de"
+    name: "Hotfrog"
+    shadow_elements: []
+    locators:
+      search_input: "input[name='what']"
+      location_input: "input[name='where']"
+      search_btn: "button[type='submit']"
+
+timeouts:
+  page_load: 30000
+  element_wait: 10000
+  shadow_pierce: 5000
