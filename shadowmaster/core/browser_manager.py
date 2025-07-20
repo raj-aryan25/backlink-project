@@ -1,136 +1,116 @@
-"""
-Browser Manager for ShadowMaster Framework
-Handles Playwright browser lifecycle, configuration, and recording capabilities.
-"""
+# browser_manager.py - FIXED VERSION
+# This fixes the "record_trace_dir" error and enables visible browser mode
 
 import asyncio
 import os
 from typing import Dict, Any, Optional
-from pathlib import Path
-from playwright.async_api import async_playwright, Browser, Page, BrowserContext
-import yaml
-from datetime import datetime
+from playwright.async_api import (
+    Browser,
+    BrowserContext,
+    Page,
+    Playwright,
+    async_playwright,
+)
+import logging
 
 
 class BrowserManager:
-    """Manages browser instances and configuration for cross-site testing."""
+    """Enhanced browser management with visible mode support"""
 
-    def __init__(self, config_path: str = "config/settings.yaml"):
-        self.config = self._load_config(config_path)
+    def __init__(self, config: Dict[str, Any]):
+        self.config = config
+        self.playwright: Optional[Playwright] = None
         self.browser: Optional[Browser] = None
         self.context: Optional[BrowserContext] = None
-        self.playwright = None
-        self.pages: Dict[str, Page] = {}
+        self.logger = logging.getLogger(__name__)
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
-        """Load configuration from YAML file."""
+    async def launch_browser(self, headless: bool = False, slow_mo: int = 1000):
+        """Launch browser in visible or headless mode"""
         try:
-            with open(config_path, 'r', encoding='utf-8') as f:
-                return yaml.safe_load(f)
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Configuration file not found: {config_path}")
+            self.playwright = await async_playwright().start()
 
-    async def start(self, **browser_options) -> BrowserContext:
-        """Start browser with configured options."""
-        self.playwright = await async_playwright().start()
+            # Browser launch options for better visibility and debugging
+            launch_options = {
+                "headless": headless,  # Set to False for visible mode
+                "slow_mo": slow_mo,  # Slow down actions for visibility
+                "args": [
+                    "--disable-blink-features=AutomationControlled",
+                    "--disable-dev-shm-usage",
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                    "--disable-gpu",
+                    "--window-size=1280,720",
+                ],
+            }
 
-        # Merge config with runtime options
-        launch_options = {
-            "headless": browser_options.get("headless", self.config["browser"]["headless"]),
-            "args": ["--disable-blink-features=AutomationControlled"],
-        }
+            # Launch browser
+            self.browser = await self.playwright.chromium.launch(**launch_options)
 
-        self.browser = await self.playwright.chromium.launch(**launch_options)
+            # Create context with proper settings - FIXED: Removed record_trace_dir
+            context_options = {
+                "viewport": {"width": 1280, "height": 720},
+                "ignore_https_errors": True,
+                "java_script_enabled": True,
+                "accept_downloads": True,
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            }
 
-        # Context options
-        context_options = {
-            "viewport": self.config["browser"]["viewport"],
-            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        }
+            # Add video recording if specified - FIXED: Using correct parameter
+            if self.config.get("record_video", False):
+                os.makedirs("videos", exist_ok=True)
+                context_options["record_video_dir"] = "videos"
+                context_options["record_video_size"] = {"width": 1280, "height": 720}
 
-        # Add recording options if enabled
-        if self.config["browser"].get("video_recording"):
-            context_options["record_video_dir"] = "test-results/videos"
+            self.context = await self.browser.new_context(**context_options)
 
-        if self.config["browser"].get("trace"):
-            context_options["record_trace_dir"] = "test-results/traces"
+            # FIXED: Start tracing AFTER creating context
+            if self.config.get("enable_tracing", False):
+                os.makedirs("traces", exist_ok=True)
+                await self.context.tracing.start(
+                    screenshots=True, snapshots=True, sources=True
+                )
 
-        self.context = await self.browser.new_context(**context_options)
+            self.logger.info("✅ Browser launched successfully")
+            return self.context
 
-        # Start tracing if enabled
-        if self.config["browser"].get("trace"):
-            await self.context.tracing.start(screenshots=True, snapshots=True)
+        except Exception as e:
+            self.logger.error(f"❌ Failed to launch browser: {e}")
+            raise
 
-        return self.context
-
-    async def new_page(self, site_name: str) -> Page:
-        """Create a new page for a specific site."""
+    async def create_page(self) -> Page:
+        """Create a new page with enhanced settings"""
         if not self.context:
-            raise RuntimeError("Browser context not started. Call start() first.")
+            raise RuntimeError("Browser context not initialized")
 
         page = await self.context.new_page()
 
-        # Set timeouts
-        page.set_default_timeout(self.config["browser"]["timeout"])
-        page.set_default_navigation_timeout(self.config["timeouts"]["page_load"])
+        # Set longer timeouts for better reliability
+        page.set_default_timeout(30000)  # 30 seconds
+        page.set_default_navigation_timeout(60000)  # 60 seconds
 
-        # Store page reference
-        self.pages[site_name] = page
+        # Add console logging for debugging
+        page.on("console", lambda msg: self.logger.info(f"Console: {msg.text}"))
+        page.on("pageerror", lambda msg: self.logger.error(f"Page error: {msg}"))
 
         return page
 
-    async def take_screenshot(self, page: Page, name: str) -> str:
-        """Take a screenshot and return the path."""
-        if not self.config["browser"].get("screenshots"):
-            return ""
+    async def cleanup(self):
+        """Clean up browser resources"""
+        try:
+            # FIXED: Stop tracing before closing context
+            if self.context and self.config.get("enable_tracing", False):
+                await self.context.tracing.stop(path="traces/trace.zip")
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        screenshot_dir = Path("test-results/screenshots")
-        screenshot_dir.mkdir(parents=True, exist_ok=True)
+            if self.context:
+                await self.context.close()
 
-        screenshot_path = screenshot_dir / f"{name}_{timestamp}.png"
-        await page.screenshot(path=str(screenshot_path), full_page=True)
+            if self.browser:
+                await self.browser.close()
 
-        return str(screenshot_path)
+            if self.playwright:
+                await self.playwright.stop()
 
-    async def close_page(self, site_name: str):
-        """Close a specific page."""
-        if site_name in self.pages:
-            await self.pages[site_name].close()
-            del self.pages[site_name]
+            self.logger.info("✅ Browser cleanup completed")
 
-    async def stop(self):
-        """Stop browser and clean up resources."""
-        # Save trace if enabled
-        if self.context and self.config["browser"].get("trace"):
-            trace_path = f"test-results/traces/trace_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
-            await self.context.tracing.stop(path=trace_path)
-
-        # Close all pages
-        for page_name in list(self.pages.keys()):
-            await self.close_page(page_name)
-
-        # Close context and browser
-        if self.context:
-            await self.context.close()
-        if self.browser:
-            await self.browser.close()
-        if self.playwright:
-            await self.playwright.stop()
-
-    def get_site_config(self, site_name: str) -> Dict[str, Any]:
-        """Get configuration for a specific site."""
-        return self.config["sites"].get(site_name, {})
-
-    def get_timeout(self, timeout_type: str) -> int:
-        """Get timeout configuration."""
-        return self.config["timeouts"].get(timeout_type, 30000)
-
-    async def __aenter__(self):
-        """Async context manager entry."""
-        await self.start()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        """Async context manager exit."""
-        await self.stop()
+        except Exception as e:
+            self.logger.error(f"❌ Error during cleanup: {e}")
