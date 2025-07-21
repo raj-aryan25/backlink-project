@@ -1,0 +1,23 @@
+2025-07-22 01:07:29,488 [INFO] - --- Starting Test Case: das_oertliche ---
+2025-07-22 01:07:32,005 [INFO] - Executing step 1: The button to accept all cookies. The text is likely 'Alle Akzeptieren' or similar.
+2025-07-22 01:07:34,099 [INFO] - Querying AI for the best selector...
+2025-07-22 01:07:35,525 [ERROR] - Error communicating with Google AI: 404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-07-22 01:07:35,527 [ERROR] - Step 1 FAILED: The button to accept all cookies. The text is likely 'Alle Akzeptieren' or similar.. Reason: AI failed to provide a valid selector.
+2025-07-22 01:07:35,529 [ERROR] - --- Test Case: das_oertliche FAILED ---
+2025-07-22 01:07:35,890 [INFO] - Failure screenshot saved to results/screenshots/das_oertliche_FAILURE.png
+2025-07-22 01:07:36,427 [INFO] - Playwright trace saved to results/traces/das_oertliche_trace.zip
+2025-07-22 01:07:36,529 [INFO] - --- Starting Test Case: gelbe_seiten ---
+2025-07-22 01:07:59,206 [INFO] - Executing step 1: The primary button to accept all cookies. The text is likely 'Alle Akzeptieren' or 'Zustimmen'.
+2025-07-22 01:08:01,273 [INFO] - Querying AI for the best selector...
+2025-07-22 01:08:03,501 [ERROR] - Error communicating with Google AI: 404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-07-22 01:08:03,503 [ERROR] - Step 1 FAILED: The primary button to accept all cookies. The text is likely 'Alle Akzeptieren' or 'Zustimmen'.. Reason: AI failed to provide a valid selector.
+2025-07-22 01:08:03,503 [ERROR] - --- Test Case: gelbe_seiten FAILED ---
+2025-07-22 01:08:03,725 [INFO] - Failure screenshot saved to results/screenshots/gelbe_seiten_FAILURE.png
+2025-07-22 01:08:03,910 [INFO] - Playwright trace saved to results/traces/gelbe_seiten_trace.zip
+2025-07-22 01:08:03,965 [INFO] - --- Starting Test Case: reddit ---
+2025-07-22 01:08:04,662 [INFO] - Executing step 1: The main login button on the top right of the homepage.
+2025-07-22 01:08:06,682 [INFO] - Using standard selector: #login-button
+2025-07-22 01:08:11,717 [ERROR] - Step 1 FAILED: The main login button on the top right of the homepage.. Reason: Timeout 5000ms exceeded.
+2025-07-22 01:08:11,717 [ERROR] - --- Test Case: reddit FAILED ---
+2025-07-22 01:08:12,000 [INFO] - Failure screenshot saved to results/screenshots/reddit_FAILURE.png
+2025-07-22 01:08:12,083 [INFO] - Playwright trace saved to results/traces/reddit_trace.zip
