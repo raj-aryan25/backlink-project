@@ -11,7 +11,7 @@ This project is a generalized automation framework designed to robustly interact
 1. **Clone the Repository**
 
    ```sh
-   git clone <your-repo-url>
+   git clone https://github.com/raj-aryan25/scaile-backlink.git
    cd shadowdom-auto
    ```
 
