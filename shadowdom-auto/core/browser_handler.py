@@ -24,6 +24,7 @@ class BrowserHandler:
         """
         try:
             await page.wait_for_load_state("networkidle", timeout=10000)
+            await page.wait_for_timeout(4000)  # Ensure the page is fully loaded
             screenshot = await page.screenshot()
             response = await self.gemini.analyze_screenshot(
                 screenshot, HANDLE_COOKIE_PROMPT
@@ -39,6 +40,7 @@ class BrowserHandler:
         """
         try:
             await page.wait_for_load_state("networkidle", timeout=10000)
+            await page.wait_for_timeout(5000)  # Ensure the page is fully loaded
             screenshot = await page.screenshot()
             response = await self.gemini.analyze_screenshot(
                 screenshot, CLICK_SIGNUP_PROMPT if signup else CLICK_LOGIN_PROMPT
@@ -55,7 +57,8 @@ class BrowserHandler:
         Find and fill an input field based on its description.
         """
         try:
-            await page.wait_for_load_state("networkidle", timeout=10000)
+            await page.wait_for_load_state("domcontentloaded", timeout=10000)
+            await page.wait_for_timeout(10000)  # Ensure the page is fully loaded
             screenshot = await page.screenshot()
             response = await self.gemini.analyze_screenshot(
                 screenshot,
