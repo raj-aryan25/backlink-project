@@ -16,6 +16,10 @@
   "code_parser": {
     "regex": "(\\d{6})"
   },
+  "ai_parser": {
+    "enabled": true,
+    "prompt": "From the following email text, extract the 6-digit verification code. Return only the numerical code and nothing else. Text: "
+  },
   "trigger_actions": {
     "target_url": "https://example.com/verify?code={code}"
   }

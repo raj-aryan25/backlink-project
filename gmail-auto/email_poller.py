@@ -16,7 +16,9 @@ class EmailPoller:
         """
         self.config = config.get("email_poller", {})
         self.client = EmailClient(config.get("email_client", {}))
-        self.parser = CodeParser(config.get("code_parser", {}))
+        self.parser = CodeParser(
+            config.get("code_parser", {}), config.get("ai_parser", {})
+        )
         self.action_callback = action_callback
 
     def poll(self):

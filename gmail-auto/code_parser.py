@@ -1,13 +1,30 @@
 import base64
 import re
+import os
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class CodeParser:
     """Parses email content to extract specific information, like a verification code."""
 
-    def __init__(self, config):
+    def __init__(self, code_parser_config, ai_parser_config):
         """Initializes the parser with extraction configuration."""
-        self.regex = config.get("regex", "")
+        self.regex = code_parser_config.get("regex", "")
+        self.ai_config = ai_parser_config
+
+        if self.ai_config.get("enabled"):
+            api_key = os.getenv("GOOGLE_API_KEY")
+            if api_key:
+                genai.configure(api_key=api_key)
+            else:
+                print(
+                    "Warning: AI parsing is enabled, but GOOGLE_API_KEY environment variable is not set."
+                )
+                # Disable AI if key is not found
+                self.ai_config["enabled"] = False
 
     def get_body(self, payload):
         """
@@ -57,13 +74,8 @@ class CodeParser:
 
     def extract_code(self, body, mime_type):
         """
-        Uses regex to extract a code from the email body.
-        Strips HTML tags if necessary.
+        Extracts a code from the email body using AI or regex.
         """
-        if not self.regex:
-            print("No extraction regex defined in config.")
-            return None
-
         text_to_search = body
         if mime_type == "text/html":
             # Simple regex to strip HTML tags and decode entities
@@ -71,6 +83,31 @@ class CodeParser:
             text_to_search = re.sub(
                 r"=\s*", "", text_to_search
             )  # Remove quoted-printable soft line breaks
+
+        # Try AI extraction first if enabled
+        if self.ai_config.get("enabled"):
+            print("Attempting extraction with AI...")
+            try:
+                model = genai.GenerativeModel("gemini-pro")
+                prompt = self.ai_config.get("prompt", "") + text_to_search
+                response = model.generate_content(prompt)
+                extracted_code = response.text.strip()
+                # Basic validation to ensure the AI returned something that looks like a code
+                if extracted_code and extracted_code.isdigit():
+                    print("Successfully extracted code with AI.")
+                    return extracted_code
+                else:
+                    print("AI did not return a valid code. Falling back to regex.")
+            except Exception as e:
+                print(
+                    f"An error occurred during AI extraction: {e}. Falling back to regex."
+                )
+
+        # Fallback to regex
+        print("Attempting extraction with regex...")
+        if not self.regex:
+            print("No extraction regex defined in config.")
+            return None
 
         match = re.search(self.regex, text_to_search, re.DOTALL)
 
