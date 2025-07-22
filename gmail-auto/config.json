@@ -1,0 +1,17 @@
+{
+  "email_address": "rajaryan.co25@gmail.com",
+  "poll_interval_seconds": 5,
+  "poll_timeout_seconds": 60,
+  "filters": {
+    "sender": "noreply@redditmail.com",
+    "subject": "is your Reddit verification code"
+  },
+  "extraction": {
+    "regex": "(\\d{6})"
+  },
+  "gmail_api": {
+    "credentials_file": "credentials.json",
+    "token_file": "token.json",
+    "scopes": ["https://www.googleapis.com/auth/gmail.modify"]
+  }
+}
