@@ -1,17 +1,22 @@
 {
-  "email_address": "rajaryan.co25@gmail.com",
-  "poll_interval_seconds": 5,
-  "poll_timeout_seconds": 60,
-  "filters": {
-    "sender": "noreply@redditmail.com",
-    "subject": "is your Reddit verification code"
-  },
-  "extraction": {
-    "regex": "(\\d{6})"
-  },
-  "gmail_api": {
+  "email_client": {
+    "type": "gmail",
     "credentials_file": "credentials.json",
     "token_file": "token.json",
     "scopes": ["https://www.googleapis.com/auth/gmail.modify"]
+  },
+  "email_poller": {
+    "poll_interval_seconds": 5,
+    "poll_timeout_seconds": 60,
+    "filters": {
+      "sender": "noreply@redditmail.com",
+      "subject": "is your Reddit verification code"
+    }
+  },
+  "code_parser": {
+    "regex": "(\\d{6})"
+  },
+  "trigger_actions": {
+    "target_url": "https://example.com/verify?code={code}"
   }
 }
