@@ -45,8 +45,15 @@ This project provides a modular and configurable bot to automatically poll a Gma
 ### 2. Python Environment Setup
 
 1.  **Install Libraries**: You need the Google client libraries and the new generative AI library. Open your terminal and run:
+
     ```bash
-    pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-generativeai
+    pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-generativeai python-dotenv
+    ```
+
+    alternatively, run
+
+    ```bash
+    pip install --upgrade -r requirements.txt
     ```
 
 ### 3. Application Configuration
