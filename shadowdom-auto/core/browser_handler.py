@@ -66,5 +66,6 @@ class BrowserHandler:
             )
             target_text = await self.gemini.get_button_text(response)
             await fill_input(page, target_text, text_to_fill)
+            await page.wait_for_timeout(3000)  # Wait for the input to be filled
         except Exception as e:
             print(f"Error filling input field '{field_description}': {e}")
