@@ -81,3 +81,7 @@ This project uses Google's Generative AI to intelligently parse email content. H
 - **Trade-offs**:
   - **Pros**: The AI is highly flexible and can adapt to variations in email templates where a rigid regex might fail.
   - **Cons**: Using the AI introduces an external API dependency, which adds a small amount of latency to the extraction process.
+
+## Product Demo
+
+The demo videos for the project can be found on: [Google Drive](https://drive.google.com/drive/folders/1Bfgh7MSzqtyTwgj0KNnS1N8tFyEphEYc?usp=drive_link)
