@@ -1,5 +1,3 @@
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
-google-generativeai
-python-dotenv
+# Compatibility installation file. Run from the repository root.
+# Dependencies are defined only in pyproject.toml.
+-e .[gmail,ai]

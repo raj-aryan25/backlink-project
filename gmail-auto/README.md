@@ -1,3 +1,7 @@
+# Legacy Gmail demonstration
+
+The unified framework is documented in [the root README](../README.md). This standalone bot has not yet been migrated to the new settings/profile API; its own config.json and dotenv behavior still apply.
+
 # Email Polling and Code Extraction Bot
 
 This project provides a modular and configurable bot to automatically poll a Gmail inbox, find emails matching specific criteria, and extract information (like verification codes) from the email body using regular expressions or Google's Generative AI.
@@ -47,13 +51,15 @@ This project provides a modular and configurable bot to automatically poll a Gma
 1.  **Install Libraries**: You need the Google client libraries and the new generative AI library. Open your terminal and run:
 
     ```bash
-    pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-generativeai python-dotenv
+    cd ..
+    conda run -n autoweb python -m pip install -e ".[gmail,ai]"
+    cd gmail-auto
     ```
 
     alternatively, run
 
     ```bash
-    pip install --upgrade -r requirements.txt
+    conda run -n autoweb python -m pip install -e "..[gmail,ai]"
     ```
 
 ### 3. Application Configuration
@@ -70,7 +76,7 @@ This project provides a modular and configurable bot to automatically poll a Gma
 2.  Ensure the `GOOGLE_API_KEY` environment variable is set if you are using the AI feature.
 3.  Run the main script from your terminal:
     ```bash
-    python main.py
+    conda run -n autoweb python main.py
     ```
 4.  **First-Time Authorization**: The first time you run it, a browser window will open for Google authentication. Approve the permissions to allow the script to access your Gmail. A `token.json` file will be created to save your authorization.
 5.  The script will then begin polling your inbox.

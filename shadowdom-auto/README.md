@@ -1,3 +1,7 @@
+# Legacy browser demonstration
+
+The unified framework is documented in [the root README](../README.md). This demo has not yet been migrated to the new configuration API. Its password_env field documents a future credential reference; the legacy runner currently fills only login/email identifiers.
+
 # Cross-Site Shadow DOM Automation Framework
 
 ## Overview
@@ -18,10 +22,10 @@ This project is a generalized automation framework designed to robustly interact
 2. **Install Python Dependencies**
 
    ```sh
-   pip install -r requirements.txt
-   # Or manually:
-   pip install playwright python-dotenv google-generativeai
-   playwright install
+   cd ..
+   conda run -n autoweb python -m pip install -e ".[ai]"
+   conda run -n autoweb python -m playwright install
+   cd shadowdom-auto
    ```
 
 3. **Configure API Keys**
@@ -34,7 +38,7 @@ This project is a generalized automation framework designed to robustly interact
 
 4. **Run the Framework**
    ```sh
-   python main.py
+   conda run -n autoweb python main.py
    ```
 
 ---
@@ -71,7 +75,7 @@ This project is a generalized automation framework designed to robustly interact
          {
            "task": "fill_login_details",
            "task_description": "Fill Login Details",
-           "details": { "login": "user@example.com", "password": "secret" }
+           "details": { "login": "user@example.com", "password_env": "DASOERTLICHE_PASSWORD" }
          }
        ]
      }

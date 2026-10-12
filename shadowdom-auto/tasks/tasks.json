@@ -16,7 +16,7 @@
           "task_description": "Fill Login Details",
           "details": {
             "login": "test.user@example.com",
-            "password": "P@ssw0rd123"
+            "password_env": "DASOERTLICHE_PASSWORD"
           }
         }
       ]
