@@ -2,7 +2,8 @@
   "browser": {
     "engine": "chromium",
     "headless": true,
-    "slow_mo_ms": 0
+    "slow_mo_ms": 0,
+    "launch_timeout_ms": 30000
   },
   "timeouts": {
     "action_ms": 5000,

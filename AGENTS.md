@@ -20,6 +20,6 @@
 
 ## Current authorization
 
-- The user has authorized Phase I (package structure and configuration) of IMPLEMENTATION_PLAN.md. Keep implementation within that phase until the user requests a subsequent phase.
+- The user has authorized Phase II (reliable Playwright browser primitives) of IMPLEMENTATION_PLAN.md. Keep implementation within that phase until the user requests a subsequent phase.
 - Active framework code lives in src/autoweb/. The original projects remain legacy implementations until their corresponding migration phases.
 - Use pyproject.toml as the single dependency definition. Avoid browser, Gmail, or AI client initialization during package imports.

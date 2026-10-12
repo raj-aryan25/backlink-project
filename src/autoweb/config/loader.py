@@ -87,6 +87,7 @@ _OVERRIDES = {
     "AUTOWEB_BROWSER": ("browser", "engine", "str"),
     "AUTOWEB_HEADLESS": ("browser", "headless", "bool"),
     "AUTOWEB_SLOW_MO_MS": ("browser", "slow_mo_ms", "int"),
+    "AUTOWEB_LAUNCH_TIMEOUT_MS": ("browser", "launch_timeout_ms", "int"),
     "AUTOWEB_ACTION_TIMEOUT_MS": ("timeouts", "action_ms", "int"),
     "AUTOWEB_NAVIGATION_TIMEOUT_MS": ("timeouts", "navigation_ms", "int"),
     "AUTOWEB_LOGIN_TIMEOUT_SECONDS": ("timeouts", "login_seconds", "float"),

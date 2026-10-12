@@ -1,6 +1,6 @@
 # Repository repurposing implementation plan
 
-Status: Phase I implemented at the user's request. Later phases remain pending.
+Status: Phases I and II implemented at the user's request. Phases III-VII remain pending.
 
 Phase I verification: editable installation in conda autoweb (Python 3.10.18); 49 configuration tests passed; schema-validation CLI passed; pip check reported no broken requirements. The installation repaired a pre-existing missing pytest dependency (exceptiongroup 1.3.1). Browser execution and live Gmail/Gemini validation remain in later phases.
 
@@ -96,16 +96,18 @@ Acceptance: settings and profiles load consistently; imports have no authenticat
 
 ## Phase 2: Reliable Playwright browser primitives
 
-- [ ] Extract lifecycle functions for launching the browser, creating contexts/pages, and guaranteed cleanup.
-- [ ] Implement focused navigation, banner handling, click, fill, submit, and state-wait functions.
-- [ ] Prefer configured stable locators and semantic locators; scope ambiguous controls to the expected form.
-- [ ] Support password inputs and both single-field and split-field OTP controls.
-- [ ] Resolve inputs and buttons across configured nested frame paths; use Playwright locators for open Shadow DOM.
-- [ ] Replace fixed sleeps and unconditional networkidle waits with element/navigation/state conditions.
-- [ ] Treat absent optional banners as a skip and failed required actions as failures.
-- [ ] Return explicit outcomes or propagate typed errors rather than printing and continuing.
+- [x] Extract lifecycle functions for launching the browser, creating contexts/pages, and guaranteed cleanup.
+- [x] Implement focused navigation, banner handling, click, fill, submit, and state-wait functions.
+- [x] Prefer configured stable locators and semantic locators; scope ambiguous controls to the expected form.
+- [x] Support password inputs and both single-field and split-field OTP controls.
+- [x] Resolve inputs and buttons across configured nested frame paths; use Playwright locators for open Shadow DOM.
+- [x] Replace fixed sleeps and unconditional networkidle waits with element/navigation/state conditions.
+- [x] Treat absent optional banners as a skip and failed required actions as failures.
+- [x] Return explicit outcomes or propagate typed errors rather than printing and continuing.
 
 Acceptance: controlled pages exercise ordinary DOM, open Shadow DOM, and nested iframes; required actions cannot silently fail.
+
+Verification: 113 tests passed in conda autoweb, including real headless Chromium checks against loopback-only fixtures. Coverage includes scoped/ambiguous targets, password and OTP inputs, nested-frame controls, optional banners, state/navigation waits, HTTP/timeout failures, independent browser launch timing, and cleanup after failures or cancellation during shutdown. The matching Chromium/FFmpeg binaries were installed. No live website, Gmail, or Gemini calls were required.
 
 ## Phase 3: Complete password login
 

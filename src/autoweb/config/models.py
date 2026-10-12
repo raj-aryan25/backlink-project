@@ -29,6 +29,7 @@ class BrowserSettings(Model):
     engine: Literal["chromium", "firefox", "webkit"] = "chromium"
     headless: bool = Field(default=True, strict=True)
     slow_mo_ms: Annotated[int, Field(strict=True, ge=0)] = 0
+    launch_timeout_ms: PositiveInt = 30000
 
 
 class TimeoutSettings(Model):

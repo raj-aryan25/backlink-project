@@ -151,6 +151,7 @@ def test_explicit_root_environment_override(project, monkeypatch):
     {"AUTOWEB_BROWSER": "unsupported"},
     {"AUTOWEB_ACTION_TIMEOUT_MS": "0"},
     {"AUTOWEB_SLOW_MO_MS": "-1"},
+    {"AUTOWEB_LAUNCH_TIMEOUT_MS": "0"},
     {"AUTOWEB_LOGIN_TIMEOUT_SECONDS": "nan"},
     {"AUTOWEB_AI_ENABLED": "true"},
     {"AUTOWEB_VERIFICATION_TIMEOUT_SECONDS": "121"},

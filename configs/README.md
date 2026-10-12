@@ -13,6 +13,7 @@ Environment variables override these settings:
 | AUTOWEB_BROWSER | browser.engine |
 | AUTOWEB_HEADLESS | browser.headless; true or false |
 | AUTOWEB_SLOW_MO_MS | browser.slow_mo_ms |
+| AUTOWEB_LAUNCH_TIMEOUT_MS | browser.launch_timeout_ms |
 | AUTOWEB_ACTION_TIMEOUT_MS | timeouts.action_ms |
 | AUTOWEB_NAVIGATION_TIMEOUT_MS | timeouts.navigation_ms |
 | AUTOWEB_LOGIN_TIMEOUT_SECONDS | timeouts.login_seconds |
@@ -44,7 +45,7 @@ Steps retain their individual parameters:
 
 Every step can set optional and timeout_ms. Required credential entry, OTP request/fill, and submission cannot be replaced by optional steps. Email flows require one request_otp followed by one fill_otp and a submit; the request action can also submit the password form in a password-plus-OTP flow.
 
-Locators define by (role, label, placeholder, text, css, test_id), value, and optional exact, name, frame_path, and scope. name applies only to role locators. frame_path is an ordered list of iframe CSS selectors from outermost to innermost; scope is a CSS selector within that frame. These are declarative contracts for Phase II, not an implemented locator resolver.
+Locators define by (role, label, placeholder, text, css, test_id), value, and optional exact, name, frame_path, and scope. name applies only to role locators. frame_path is an ordered list of iframe CSS selectors from outermost to innermost; scope is a CSS selector within that frame. Phase II implements these locator contracts for actions and state waits; duplicate matches fail rather than selecting the first match.
 
 Success and failure checks are element assertions (target plus visible/hidden state) or URL assertions (pattern). Success requires at least one visible authenticated-element check; a URL or disappearing form alone is insufficient. The future runner will require all success assertions and treat any matching failure assertion as failure.
 
